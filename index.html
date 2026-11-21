@@ -1,1 +1,172 @@
-# w-cut-pro
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="htmlRoot">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>W-Cut Pro</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 1. شاشة الترحيب (Welcome Screen) -->
+  <section id="welcomeScreen" class="welcome-screen">
+    <div class="welcome-top">
+      <select id="welcomeLangSelect" class="mini-select">
+        <option value="en">🌐 English</option>
+        <option value="ar">🌐 العربية</option>
+        <option value="fr">🌐 Français</option>
+        <option value="es">🌐 Español</option>
+      </select>
+    </div>
+
+    <div class="welcome-hero">
+      <div class="app-icon-glow">W</div>
+      <h1>W-Cut <span>PRO</span></h1>
+      <p data-i18n="welcomeSub">Next-Gen AI Video & Beat Studio</p>
+
+      <button id="startNewBtn" class="btn-start-main" data-i18n="newProject">
+        ✨ + New Project
+      </button>
+
+      <div class="quick-ratios">
+        <button class="ratio-card" data-ratio="9:16">📱 TikTok / Reels<br><small>9:16</small></button>
+        <button class="ratio-card" data-ratio="1:1">🟦 Instagram<br><small>1:1</small></button>
+        <button class="ratio-card" data-ratio="16:9">🎬 YouTube<br><small>16:9</small></button>
+      </div>
+    </div>
+
+    <div class="welcome-footer">
+      <span data-i18n="featuresTag">⚡ Kids Privacy AI • DJ Halo • Auto Lyrics • 60FPS</span>
+    </div>
+  </section>
+
+  <!-- 2. ورشة المونتاج (Editor Workspace) -->
+  <div id="editorApp" class="editor-app hidden">
+    <header>
+      <div class="header-left">
+        <button id="backHomeBtn" class="icon-btn-sm" title="Home">🏠</button>
+        <div class="logo">W-Cut <span>PRO</span></div>
+      </div>
+      <div class="header-actions">
+        <button id="saveDraftBtn" class="chip-btn" title="Save Draft">💾</button>
+        <select id="ratioSelect" class="mini-select">
+          <option value="9:16">9:16</option>
+          <option value="1:1">1:1</option>
+          <option value="16:9">16:9</option>
+        </select>
+        <button id="exportBtn" class="btn-export" data-i18n="export">Save HD ⬇️</button>
+      </div>
+    </header>
+
+    <div class="preview-container">
+      <div class="canvas-box" id="canvasBox">
+        <canvas id="videoCanvas" width="540" height="960"></canvas>
+        <div id="recordingBadge" class="badge hidden" data-i18n="rendering">🔴 Rendering...</div>
+        <div id="mediaCounter" class="counter-badge hidden">1 / 1</div>
+      </div>
+    </div>
+
+    <div class="timeline-section">
+      <div class="playback-bar">
+        <button id="playPauseBtn" class="icon-btn">▶️</button>
+        <span id="timeDisplay">00:00 / 00:00</span>
+        <button id="speedBtn" class="chip-btn">⚡ 1x</button>
+      </div>
+      <input type="range" id="seekBar" value="0" min="0" max="100" step="0.1">
+    </div>
+
+    <div class="bottom-dock">
+      <!-- Media & DJ Logo -->
+      <div class="tab-content" id="tab-media">
+        <div class="grid-3">
+          <label class="action-card">
+            <span>🎞️</span>
+            <p data-i18n="importMedia">Videos/Photos</p>
+            <input type="file" id="bgInput" multiple hidden>
+          </label>
+          <label class="action-card">
+            <span>🎵</span>
+            <p data-i18n="importAudio">Audio/Music</p>
+            <input type="file" id="audioInput" hidden>
+          </label>
+          <label class="action-card logo-card">
+            <span>💿</span>
+            <p data-i18n="importLogo">Add Logo</p>
+            <input type="file" id="logoInput" accept="image/*" hidden>
+          </label>
+        </div>
+        <div id="logoControls" class="row-tools hidden">
+          <button id="logoRingBtn" class="chip-btn active">💫 DJ Halo</button>
+          <button id="logoBlendBtn" class="chip-btn">🪄 No Black</button>
+          <button id="logoRemoveBtn" class="chip-btn">❌</button>
+          <input type="range" id="logoSizeSlider" min="60" max="280" value="150">
+        </div>
+      </div>
+
+      <!-- Text & Lyrics -->
+      <div class="tab-content hidden" id="tab-text" style="height: auto; padding-bottom: 8px;">
+        <div class="row-tools">
+          <input type="text" id="topTitleInput" data-i18n-placeholder="titlePh" placeholder="Top Title (Optional)">
+          <button id="titleBgBtn" class="chip-btn">⬜ BG: OFF</button>
+        </div>
+        <textarea id="lyricsInput" rows="2" data-i18n-placeholder="lyricsPh" placeholder="Write lyrics (Auto-wraps to 2 lines)..."></textarea>
+        <div class="vfx-grid">
+          <button id="fontFamilyBtn" class="chip-btn active">✒️ Calligraphic</button>
+          <button id="textAnimBtn" class="chip-btn active">✨ Wave</button>
+          <button id="textSlantBtn" class="chip-btn">📐 Slant: OFF</button>
+          <button id="textStyleBtn" class="chip-btn">🎨 Yellow</button>
+          <input type="range" id="fontSizeSlider" min="24" max="70" value="42" style="grid-column: span 2;">
+        </div>
+      </div>
+
+      <!-- Kids Privacy AI -->
+      <div class="tab-content hidden" id="tab-kids">
+        <div class="vfx-grid">
+          <button id="kidsGuardBtn" class="vfx-btn" data-i18n="kidsGuard">👶 Guard: OFF</button>
+          <button id="maskTypeBtn" class="vfx-btn active">🌫️ Blur</button>
+          <button id="clearMasksBtn" class="vfx-btn" data-i18n="clearMasks">🗑️ Reset</button>
+        </div>
+        <p class="sub-note" data-i18n="kidsNote">Auto-detects child faces or tap any face on screen to cover.</p>
+      </div>
+
+      <!-- Pro VFX -->
+      <div class="tab-content hidden" id="tab-vfx">
+        <div class="vfx-grid">
+          <button class="vfx-btn active" data-vfx="bassZoom" data-i18n="vfxZoom">🔊 Bass Zoom</button>
+          <button class="vfx-btn" data-vfx="shake" data-i18n="vfxShake">📳 Cam Shake</button>
+          <button class="vfx-btn" data-vfx="glitch" data-i18n="vfxGlitch">👾 RGB Glitch</button>
+          <button class="vfx-btn" data-vfx="relight" data-i18n="vfxRelight">💡 AI Relight</button>
+          <button class="vfx-btn active" data-vfx="visualizer" data-i18n="vfxWave">📊 Visualizer</button>
+          <button id="filterBtn" class="vfx-btn">🎞️ Normal</button>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-target="tab-media" data-i18n="tabMedia">📁 Media</button>
+        <button class="nav-btn" data-target="tab-text" data-i18n="tabText">🔤 Text</button>
+        <button class="nav-btn" data-target="tab-kids" data-i18n="tabKids">👶 Kids AI</button>
+        <button class="nav-btn" data-target="tab-vfx" data-i18n="tabVfx">✨ Pro VFX</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- نافذة الحفظ المضمون (Save Modal for APK & Mobile) -->
+  <div id="saveModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 data-i18n="videoReady">✅ Video Ready!</h3>
+      <video id="exportedPreview" controls playsinline></video>
+      <div class="modal-actions">
+        <a id="directDownloadLink" download="W-Cut-Pro-Video.webm" class="btn-save-file" data-i18n="downloadFile">⬇️ Save to Device</a>
+        <button id="nativeShareBtn" class="btn-share-file" data-i18n="shareFile">📤 Share / Gallery</button>
+      </div>
+      <button id="closeModalBtn" class="btn-close-modal" data-i18n="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <video id="bgVideo" playsinline muted hidden></video>
+  <audio id="bgAudio" crossorigin="anonymous"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
+
